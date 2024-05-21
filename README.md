@@ -1,0 +1,2 @@
+# L_Pancorbo_Automatic_Segmentation_of_Ventricular_Volumes_from_Cardiac_Optoacoustic_Data
+Repository for Semester Project "Automatic Segmentation of Ventricular Volumes from Cardiac Optoacoustic Data".
