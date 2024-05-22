@@ -1,6 +1,6 @@
 import numpy as np
 import feret
-from skimage.segmentation import disk_level_set, morphological_geodesic_active_contour, morphological_chan_vese
+from skimage.segmentation import morphological_geodesic_active_contour, morphological_chan_vese
 from autoSegment import autoSegment, denoise_slice
 
 def get_max_caliper_diameter(mask):
@@ -21,7 +21,7 @@ def get_max_caliper_diameter(mask):
         max_caliper_diameter = feret.max(mask)
     return max_caliper_diameter
 
-def propagate_mask_restricted(current_slice, current_mask, slice_set, denoise_method, active_contours_method):
+def propagate_mask_restricted(current_slice, current_mask, slice_set, denoised_method, active_contours_method):
     """ Propagate a mask from a given slice to the rest of the volume.
     Inputs
     ----------
@@ -31,6 +31,9 @@ def propagate_mask_restricted(current_slice, current_mask, slice_set, denoise_me
         Mask to be propagated.
     slice_set : 3D array (N,M,L)
         Set of slices (Volume) to propagate the mask.
+    denoised_method : String
+        "tvl1": Total variation L1 denoising.
+        "median": Median filter.
     active_contours_method : String
         "acwe": Chan-Vese active contours without edges.
         "geodesic": Geodesic active contours.
@@ -52,7 +55,7 @@ def propagate_mask_restricted(current_slice, current_mask, slice_set, denoise_me
         
         I = slice_set[:, :, i]
         I = (I - np.min(I)) / (np.max(I) - np.min(I))
-        J = denoise_slice(I, denoise_method)
+        J = denoise_slice(I, denoised_method)
         J = (J - np.min(J)) / (np.max(J) - np.min(J))
     
         if active_contours_method == 'acwe':
@@ -76,7 +79,7 @@ def propagate_mask_restricted(current_slice, current_mask, slice_set, denoise_me
         
         I = slice_set[:, :, i]
         I = (I - np.min(I)) / (np.max(I) - np.min(I))
-        J = denoise_slice(I, denoise_method)
+        J = denoise_slice(I, denoised_method)
         J = (J - np.min(J)) / (np.max(J) - np.min(J))
     
         if active_contours_method == 'acwe':
@@ -96,14 +99,43 @@ def propagate_mask_restricted(current_slice, current_mask, slice_set, denoise_me
 
     return propagated_masks
 
-def restrictedPropagation(tensor_4d, t_slice, dimension, data):
-    y_central = tensor_4d.shape[1] // 2
-    y_slice = tensor_4d[:,y_central,:,t_slice]
-    y_mask = autoSegment(y_slice, data)
+def restrictedPropagation(tensor_4d, t_slice, dimension, denoised_method, active_contours_method):
+    """ Propagate a mask from a given slice to the rest of the volume.
+    Inputs
+    ----------
+    tensor_4d : 4D array (N,M,L,T)
+        4D tensor to propagate the mask.
+    t_slice : Integer
+        Index of the current slice.
+    dimension : Integer
+        Dimension to propagate the mask.
+    denoised_method : String
+        "tvl1": Total variation L1 denoising.
+        "median": Median filter.
+    active_contours_method : String
+        "acwe": Chan-Vese active contours without edges.
+        "geodesic": Geodesic active contours.
+    Returns
+    -------
+    propagated_masks : 3D array (N,M,L)
+        Set of propagated masks (Volume).
+    """
+    central_indx = tensor_4d.shape[dimension] // 2
+
+    if dimension == 0:
+        slice = tensor_4d[central_indx, :, :, t_slice]
+    elif dimension == 1:
+        slice = tensor_4d[:, central_indx, :, t_slice]
+    elif dimension == 2:
+        slice = tensor_4d[:, :, central_indx, t_slice]
+    else:
+        raise ValueError("Invalid dimension value")
+
+    central_mask = autoSegment(slice, denoised_method, active_contours_method)
 
     volume = tensor_4d[:,:,:,t_slice]
-    slice_set_sagittal = np.swapaxes(volume,1,2)
+    slice_set = np.swapaxes(volume, dimension, 2)
 
-    y_propagated_masks = propagate_mask_restricted(y_central, y_mask, slice_set_sagittal, data)
+    propagated_masks = propagate_mask_restricted(central_indx, central_mask, slice_set, denoised_method, active_contours_method)
     
-    return y_propagated_masks
+    return propagated_masks

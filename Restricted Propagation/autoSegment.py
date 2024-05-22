@@ -39,6 +39,10 @@ def autoSegment(slice, denoised_method, active_contours_method):
     active_contours_method : String
         "acwe": Chan-Vese active contours without edges.
         "geodesic": Geodesic active contours.
+    Returns
+    -------
+    mask : 2D array (N,M)
+        Binary mask of the segmented image slice.
     """
     # Pre-processing
     I = (slice - np.min(slice)) / (np.max(slice) - np.min(slice))
