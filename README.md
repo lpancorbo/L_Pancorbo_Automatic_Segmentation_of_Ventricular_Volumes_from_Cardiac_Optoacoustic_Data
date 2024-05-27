@@ -1,5 +1,6 @@
 # L_Pancorbo_Automatic_Segmentation_of_Ventricular_Volumes_from_Cardiac_Optoacoustic_Data
 Repository for Semester Project "Automatic Segmentation of Ventricular Volumes from Cardiac Optoacoustic Data".
+Multiscale Functional and Molecular Imaging Lab (ETH Zürich) under supervision of Dr. Çağla Özsoy, Dr. Luis Deán-Ben & Prof. Daniel Razansky
 
 ## Requirements
 The following packages are required to run this project:
