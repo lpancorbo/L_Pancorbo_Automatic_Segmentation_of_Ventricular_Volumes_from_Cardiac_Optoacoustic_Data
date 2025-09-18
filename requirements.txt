@@ -1,0 +1,8 @@
+numpy
+scikit-image
+feret
+matplotlib
+jupyter
+scipy
+tqdm
+ipywidgets
