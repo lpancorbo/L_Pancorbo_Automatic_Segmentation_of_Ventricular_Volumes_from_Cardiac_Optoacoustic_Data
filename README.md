@@ -1,25 +1,22 @@
-# L_Pancorbo_Automatic_Segmentation_of_Ventricular_Volumes_from_Cardiac_Optoacoustic_Data
+# Automatic Segmentation of Ventricular Volumes from Cardiac Optoacoustic Data
 Repository for Semester Project "Automatic Segmentation of Ventricular Volumes from Cardiac Optoacoustic Data" done at the Multiscale Functional and Molecular Imaging Lab (ETH Zürich) under supervision of Dr. Çağla Özsoy, Dr. Luis Deán-Ben & Prof. Daniel Razansky
 
-## Requirements
-The following packages are required to run this project:
-
-- numpy
-- matplotlib
-- ipywidgets
-- scipy
-- skimage
-- Feret
-- tqdm (optional)
-
-You can install these packages using pip:
+## Environment
+To set up the environment, follow the steps below.
 
 ```bash
-pip install numpy matplotlib ipywidgets scipy scikit-image Feret
+# Create a new conda environment
+conda create -n ventricular-seg python=3.10
+
+# Activate the environment
+conda activate ventricular-seg
+
+# Install dependencies from requirements.txt
+pip install -r requirements.txt
 ```
 
-## Example Code
-You can find an example of how to use this project in the `example.ipynb` notebook. The code snippet below demonstrates a basic usage:
+## Demo
+You can find an example of how to use this project in [notebooks/example.ipynb](notebooks/example.ipynb). The code snippet below demonstrates a basic usage:
 
 ```bash
 propagated_mask = restrictedPropagation(volume_4d, t_slice=170, dimension=1, denoised_method='tvl1', active_contours_method='acwe')
