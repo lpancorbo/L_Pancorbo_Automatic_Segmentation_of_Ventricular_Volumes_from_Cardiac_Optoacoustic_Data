@@ -1,8 +1,6 @@
 # Automatic Segmentation of Ventricular Volumes from Cardiac Optoacoustic Data
 Repository containing the code used in my semester project at the Multiscale Functional and Molecular Imaging Lab (ETH Zürich) under supervision of Dr. Çağla Özsoy, Dr. Luis Deán-Ben & Prof. Daniel Razansky.
 
-For detailed methodology, results, and conclusions, please refer to the [project report](docs).
-
 ## Environment
 To set up the environment, follow the steps below.
 
